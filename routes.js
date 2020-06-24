@@ -1,4 +1,5 @@
 const notes = require('./db.json');
+const fs = require("fs");
 let id = 1;
 
 exports.route = (app) => {
@@ -16,6 +17,12 @@ exports.route = (app) => {
         console.log(req.body);
       
         notes.push(newNote);
+        
+        let data = JSON.stringify(notes);
+        fs.writeFile("db.json", data, function(err){
+            if(err) throw err;
+            console.log("Created successfully");
+        })
       
         res.json(newNote);
       });
@@ -26,6 +33,11 @@ exports.route = (app) => {
         var arrayIndex = notes.findIndex(x => x.id === deleteId);
         if (arrayIndex > -1){
             notes.splice(arrayIndex, 1);
+            let data = JSON.stringify(notes);
+            fs.writeFile("db.json", data, function(err){
+                if(err) throw err;
+                console.log("Created successfully");
+            })
         }
         res.send(`successfully deleted note ${deleteId}`);
       });
